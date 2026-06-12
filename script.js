@@ -16,8 +16,11 @@ let idCounter = 3;
 const input =
 document.getElementById("studentInput");
 
-const addBtn =
-document.getElementById("addBtn");
+const studentForm =
+document.getElementById("studentForm");
+
+const formMessage =
+document.getElementById("formMessage");
 
 const saveBtn =
 document.getElementById("saveBtn");
@@ -89,13 +92,18 @@ function displayStudents(){
 
 
 // Add Student
-addBtn.addEventListener("click",()=>{
+studentForm.addEventListener("submit",(event)=>{
+
+    event.preventDefault();
 
     let name =
     input.value.trim();
 
     if(name===""){
-        alert("Enter Student Name");
+        formMessage.textContent =
+        "Please enter a student name.";
+
+        input.focus();
         return;
     }
 
@@ -106,8 +114,15 @@ addBtn.addEventListener("click",()=>{
     });
 
     input.value="";
+    formMessage.textContent = "";
 
     displayStudents();
+});
+
+
+input.addEventListener("input",()=>{
+
+    formMessage.textContent = "";
 });
 
 

@@ -12,26 +12,31 @@
 
     <div class="container">
 
-        <center>
+        <header>
             <h1>Student Attendance System</h1>
-        </center>
+            <p class="subtitle">Add students and record their attendance.</p>
+        </header>
 
-        <div class="top-section">
+        <form id="studentForm" class="top-section" novalidate>
 
+            <label class="visually-hidden" for="studentInput">Student name</label>
             <input
                 id="studentInput"
                 type="text"
-                placeholder="Enter Student Name">
+                placeholder="Enter student name"
+                autocomplete="off">
 
-            <button id="addBtn" class="add-btn">
+            <button id="addBtn" class="add-btn" type="submit">
                 Add Student
             </button>
 
-            <button id="saveBtn" class="save-btn">
+            <button id="saveBtn" class="save-btn" type="button">
                 Save Attendance
             </button>
 
-        </div>
+        </form>
+
+        <p id="formMessage" class="form-message" aria-live="polite"></p>
 
         <table>
 
