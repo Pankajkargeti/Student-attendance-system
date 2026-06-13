@@ -1,4 +1,6 @@
-let students = [
+const STORAGE_KEY = "attendanceStudents";
+
+const defaultStudents = [
     {
         id:1,
         name:"Anurag Kumar",
@@ -11,7 +13,10 @@ let students = [
     }
 ];
 
-let idCounter = 3;
+let students = loadStudents();
+
+let idCounter =
+Math.max(...students.map(student=>student.id), 0) + 1;
 
 const input =
 document.getElementById("studentInput");
@@ -36,6 +41,40 @@ document.getElementById("present");
 
 const absent =
 document.getElementById("absent");
+
+
+// Load saved students
+function loadStudents(){
+
+    let savedStudents =
+    localStorage.getItem(STORAGE_KEY);
+
+    if(savedStudents===null){
+        return defaultStudents;
+    }
+
+    try{
+        let parsedStudents =
+        JSON.parse(savedStudents);
+
+        return Array.isArray(parsedStudents)
+        ?parsedStudents
+        :defaultStudents;
+    }
+    catch(error){
+        return defaultStudents;
+    }
+}
+
+
+// Save students in the browser
+function saveStudents(){
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(students)
+    );
+}
 
 
 // Display Students
@@ -117,6 +156,7 @@ studentForm.addEventListener("submit",(event)=>{
     formMessage.textContent = "";
 
     displayStudents();
+    saveStudents();
 });
 
 
@@ -141,6 +181,7 @@ function toggleAttendance(id){
     });
 
     displayStudents();
+    saveStudents();
 }
 
 
@@ -153,6 +194,7 @@ function deleteStudent(id){
     );
 
     displayStudents();
+    saveStudents();
 }
 
 
