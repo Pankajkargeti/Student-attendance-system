@@ -1,4 +1,6 @@
 const STORAGE_KEY = "attendanceStudents";
+const ATTENDANCE_STORAGE_KEY = "attendanceRecords";
+const today = getToday();
 
 const defaultStudents = [
     {
@@ -15,11 +17,17 @@ const defaultStudents = [
 
 let students = loadStudents();
 
+let attendanceRecords =
+loadAttendanceRecords();
+
 let idCounter =
 Math.max(...students.map(student=>student.id), 0) + 1;
 
 const input =
 document.getElementById("studentInput");
+
+const attendanceDate =
+document.getElementById("attendanceDate");
 
 const studentForm =
 document.getElementById("studentForm");
@@ -41,6 +49,19 @@ document.getElementById("present");
 
 const absent =
 document.getElementById("absent");
+
+
+// Get today's date for the date selector
+function getToday(){
+
+    let date = new Date();
+
+    let year = date.getFullYear();
+    let month = String(date.getMonth()+1).padStart(2,"0");
+    let day = String(date.getDate()).padStart(2,"0");
+
+    return `${year}-${month}-${day}`;
+}
 
 
 // Load saved students
@@ -67,6 +88,40 @@ function loadStudents(){
 }
 
 
+// Load saved attendance records
+function loadAttendanceRecords(){
+
+    let savedRecords =
+    localStorage.getItem(ATTENDANCE_STORAGE_KEY);
+
+    if(savedRecords===null){
+        let firstRecord = {};
+
+        students.forEach(student=>{
+            firstRecord[student.id] =
+            student.status || "Present";
+        });
+
+        return {
+            [today]:firstRecord
+        };
+    }
+
+    try{
+        let parsedRecords =
+        JSON.parse(savedRecords);
+
+        return typeof parsedRecords === "object"
+        && parsedRecords !== null
+        ?parsedRecords
+        :{};
+    }
+    catch(error){
+        return {};
+    }
+}
+
+
 // Save students in the browser
 function saveStudents(){
 
@@ -77,12 +132,39 @@ function saveStudents(){
 }
 
 
+// Save attendance records in the browser
+function saveAttendanceRecords(){
+
+    localStorage.setItem(
+        ATTENDANCE_STORAGE_KEY,
+        JSON.stringify(attendanceRecords)
+    );
+}
+
+
+// Get a student's attendance for the selected date
+function getAttendanceStatus(id){
+
+    let selectedDate = attendanceDate.value;
+
+    if(attendanceRecords[selectedDate]===undefined){
+        return "Present";
+    }
+
+    return attendanceRecords[selectedDate][id]
+    || "Present";
+}
+
+
 // Display Students
 function displayStudents(){
 
     tableBody.innerHTML = "";
 
     students.forEach(student => {
+
+        let status =
+        getAttendanceStatus(student.id);
 
         let row =
         document.createElement("tr");
@@ -93,11 +175,11 @@ function displayStudents(){
         <td>${student.name}</td>
 
         <td class="${
-            student.status==="Present"
+            status==="Present"
             ?"status-present"
             :"status-absent"
         }">
-            ${student.status}
+            ${status}
         </td>
 
         <td>
@@ -106,7 +188,7 @@ function displayStudents(){
             onclick="toggleAttendance(${student.id})">
 
             ${
-                student.status==="Present"
+                status==="Present"
                 ?"Mark Absent"
                 :"Mark Present"
             }
@@ -166,22 +248,32 @@ input.addEventListener("input",()=>{
 });
 
 
+attendanceDate.addEventListener("change",()=>{
+
+    displayStudents();
+});
+
+
 // Toggle Attendance
 function toggleAttendance(id){
 
-    students.forEach(student=>{
+    let selectedDate =
+    attendanceDate.value;
 
-        if(student.id===id){
+    if(attendanceRecords[selectedDate]===undefined){
+        attendanceRecords[selectedDate] = {};
+    }
 
-            student.status =
-            student.status==="Present"
-            ?"Absent"
-            :"Present";
-        }
-    });
+    let status =
+    getAttendanceStatus(id);
+
+    attendanceRecords[selectedDate][id] =
+    status==="Present"
+    ?"Absent"
+    :"Present";
 
     displayStudents();
-    saveStudents();
+    saveAttendanceRecords();
 }
 
 
@@ -193,8 +285,13 @@ function deleteStudent(id){
         student.id!==id
     );
 
+    Object.keys(attendanceRecords).forEach(date=>{
+        delete attendanceRecords[date][id];
+    });
+
     displayStudents();
     saveStudents();
+    saveAttendanceRecords();
 }
 
 
@@ -206,12 +303,12 @@ function updateSummary(){
 
     let presentCount =
     students.filter(student=>
-        student.status==="Present"
+        getAttendanceStatus(student.id)==="Present"
     ).length;
 
     let absentCount =
     students.filter(student=>
-        student.status==="Absent"
+        getAttendanceStatus(student.id)==="Absent"
     ).length;
 
     present.textContent =
@@ -227,7 +324,14 @@ saveBtn.addEventListener("click",()=>{
 
     let data =
     JSON.stringify(
-        students,
+        {
+            date:attendanceDate.value,
+            students:students.map(student=>({
+                id:student.id,
+                name:student.name,
+                status:getAttendanceStatus(student.id)
+            }))
+        },
         null,
         2
     );
@@ -251,4 +355,5 @@ saveBtn.addEventListener("click",()=>{
 
 
 // Initial Load
+attendanceDate.value = today;
 displayStudents();

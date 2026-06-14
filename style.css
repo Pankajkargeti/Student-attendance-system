@@ -29,9 +29,24 @@ h1{
     color:#6c757d;
 }
 
+.date-section{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:28px;
+    font-weight:bold;
+}
+
+.date-section input{
+    border:1px solid #adb5bd;
+    border-radius:6px;
+    padding:12px;
+    font:inherit;
+}
+
 .top-section{
     display:flex;
-    margin-top:28px;
+    margin-top:16px;
     gap:12px;
 }
 
@@ -166,12 +181,14 @@ td{
     }
 
     .top-section,
-    .summary{
+    .summary,
+    .date-section{
         flex-direction:column;
         height:auto;
     }
 
     .top-section input,
+    .date-section input,
     .add-btn,
     .save-btn{
         width:auto;
@@ -182,6 +199,10 @@ td{
         align-items:stretch;
         gap:12px;
         font-size:20px;
+    }
+
+    .date-section{
+        align-items:stretch;
     }
 
     table{
