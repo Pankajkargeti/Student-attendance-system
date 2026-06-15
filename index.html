@@ -4,96 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Attendance System</title>
-
-    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-    <div class="container">
-
-        <header>
-            <h1>Student Attendance System</h1>
-            <p class="subtitle">Add students and record their attendance.</p>
-        </header>
-
-        <div class="date-section">
-            <label for="attendanceDate">Attendance date</label>
-            <input id="attendanceDate" type="date">
-        </div>
-
-        <form id="studentForm" class="top-section" novalidate>
-
-            <label class="visually-hidden" for="studentInput">Student name</label>
-            <input
-                id="studentInput"
-                type="text"
-                placeholder="Enter student name"
-                autocomplete="off">
-
-            <button id="addBtn" class="add-btn" type="submit">
-                Add Student
-            </button>
-
-            <button id="saveBtn" class="save-btn" type="button">
-                Save Attendance
-            </button>
-
-        </form>
-
-        <p id="formMessage" class="form-message" aria-live="polite"></p>
-
-        <div class="search-section">
-            <label class="visually-hidden" for="searchInput">Search students</label>
-            <input
-                id="searchInput"
-                type="search"
-                placeholder="Search students by name"
-                autocomplete="off">
-        </div>
-
-        <table>
-
-            <thead>
-
-                <tr>
-                    <th>ID</th>
-                    <th>Student Name</th>
-                    <th>Status</th>
-                    <th>Attendance</th>
-                    <th>Action</th>
-                </tr>
-
-            </thead>
-
-            <tbody id="studentTable">
-
-            </tbody>
-
-        </table>
-
-        <div class="summary">
-
-            <div>
-                Total Students:
-                <span id="total">0</span>
-            </div>
-
-            <div>
-                Present:
-                <span id="present">0</span>
-            </div>
-
-            <div>
-                Absent:
-                <span id="absent">0</span>
-            </div>
-
-        </div>
-
-    </div>
-
-    <script src="script.js"></script>
-
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
