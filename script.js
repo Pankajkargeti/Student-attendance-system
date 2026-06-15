@@ -26,6 +26,9 @@ Math.max(...students.map(student=>student.id), 0) + 1;
 const input =
 document.getElementById("studentInput");
 
+const searchInput =
+document.getElementById("searchInput");
+
 const attendanceDate =
 document.getElementById("attendanceDate");
 
@@ -156,12 +159,37 @@ function getAttendanceStatus(id){
 }
 
 
+// Filter the visible students by name
+function getVisibleStudents(){
+
+    let searchText =
+    searchInput.value.trim().toLowerCase();
+
+    return students.filter(student=>
+        student.name.toLowerCase().includes(searchText)
+    );
+}
+
+
 // Display Students
 function displayStudents(){
 
     tableBody.innerHTML = "";
 
-    students.forEach(student => {
+    let visibleStudents =
+    getVisibleStudents();
+
+    if(visibleStudents.length===0){
+        tableBody.innerHTML = `
+        <tr>
+            <td class="empty-message" colspan="5">
+                No students match your search.
+            </td>
+        </tr>
+        `;
+    }
+
+    visibleStudents.forEach(student => {
 
         let status =
         getAttendanceStatus(student.id);
@@ -245,6 +273,12 @@ studentForm.addEventListener("submit",(event)=>{
 input.addEventListener("input",()=>{
 
     formMessage.textContent = "";
+});
+
+
+searchInput.addEventListener("input",()=>{
+
+    displayStudents();
 });
 
 
