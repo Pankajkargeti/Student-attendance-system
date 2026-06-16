@@ -1,4 +1,8 @@
-function StudentTable({ students }){
+function StudentTable({
+    students,
+    onToggleAttendance,
+    onDeleteStudent
+}){
     return (
         <table>
             <thead>
@@ -32,7 +36,9 @@ function StudentTable({ students }){
                                 <button
                                     className="attendance-btn"
                                     type="button"
-                                    disabled
+                                    onClick={()=>{
+                                        onToggleAttendance(student.id);
+                                    }}
                                 >
                                     {attendanceButton}
                                 </button>
@@ -41,7 +47,9 @@ function StudentTable({ students }){
                                 <button
                                     className="delete-btn"
                                     type="button"
-                                    disabled
+                                    onClick={()=>{
+                                        onDeleteStudent(student.id);
+                                    }}
                                 >
                                     Delete
                                 </button>
