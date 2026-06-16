@@ -1,7 +1,11 @@
 function AttendanceForm({
+    selectedDate,
     studentName,
+    searchText,
     formMessage,
+    onDateChange,
     onStudentNameChange,
+    onSearchTextChange,
     onAddStudent
 }){
     return (
@@ -11,8 +15,10 @@ function AttendanceForm({
                 <input
                     id="attendanceDate"
                     type="date"
-                    defaultValue={new Date().toISOString().slice(0, 10)}
-                    disabled
+                    value={selectedDate}
+                    onChange={event=>{
+                        onDateChange(event.target.value);
+                    }}
                 />
             </div>
 
@@ -49,7 +55,10 @@ function AttendanceForm({
                     id="searchInput"
                     type="search"
                     placeholder="Search students by name"
-                    disabled
+                    value={searchText}
+                    onChange={event=>{
+                        onSearchTextChange(event.target.value);
+                    }}
                 />
             </div>
         </>

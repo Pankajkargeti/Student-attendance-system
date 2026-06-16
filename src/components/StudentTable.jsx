@@ -15,6 +15,13 @@ function StudentTable({
                 </tr>
             </thead>
             <tbody>
+                {students.length === 0 && (
+                    <tr>
+                        <td className="empty-message" colSpan="5">
+                            No students match your search.
+                        </td>
+                    </tr>
+                )}
                 {students.map(student=>{
                     let attendanceButton =
                     student.status === "Present"

@@ -109,6 +109,11 @@ button:disabled{
     font-size:14px;
 }
 
+.empty-message{
+    color:#6c757d;
+    font-style:italic;
+}
+
 .visually-hidden{
     position:absolute;
     width:1px;
