@@ -183,6 +183,36 @@ function App(){
         });
     }
 
+    function saveAttendance(){
+        let data = JSON.stringify(
+            {
+                date:selectedDate,
+                students:studentsWithAttendance.map(student=>({
+                    id:student.id,
+                    name:student.name,
+                    status:student.status
+                }))
+            },
+            null,
+            2
+        );
+
+        let blob = new Blob([data], {
+            type:"application/json"
+        });
+
+        let fileUrl = URL.createObjectURL(blob);
+        let link = document.createElement("a");
+
+        link.href = fileUrl;
+        link.download = `attendance-${selectedDate}.json`;
+        link.click();
+
+        setTimeout(()=>{
+            URL.revokeObjectURL(fileUrl);
+        }, 0);
+    }
+
     let studentsWithAttendance = students.map(student=>({
         ...student,
         status:getAttendanceStatus(student.id)
@@ -206,6 +236,7 @@ function App(){
                 onStudentNameChange={updateStudentName}
                 onSearchTextChange={setSearchText}
                 onAddStudent={addStudent}
+                onSaveAttendance={saveAttendance}
             />
             <StudentTable
                 students={visibleStudents}

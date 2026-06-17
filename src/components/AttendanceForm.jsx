@@ -6,7 +6,8 @@ function AttendanceForm({
     onDateChange,
     onStudentNameChange,
     onSearchTextChange,
-    onAddStudent
+    onAddStudent,
+    onSaveAttendance
 }){
     return (
         <>
@@ -38,7 +39,11 @@ function AttendanceForm({
                 <button className="add-btn" type="submit">
                     Add Student
                 </button>
-                <button className="save-btn" type="button" disabled>
+                <button
+                    className="save-btn"
+                    type="button"
+                    onClick={onSaveAttendance}
+                >
                     Save Attendance
                 </button>
             </form>
