@@ -164,6 +164,16 @@ function App(){
     }
 
     function deleteStudent(id){
+        let student = students.find(student=>student.id === id);
+        let studentName = student?.name || "this student";
+        let shouldDelete = window.confirm(
+            `Delete ${studentName}? This will also remove their attendance records.`
+        );
+
+        if(!shouldDelete){
+            return;
+        }
+
         setStudents(currentStudents=>
             currentStudents.filter(student=>student.id !== id)
         );
