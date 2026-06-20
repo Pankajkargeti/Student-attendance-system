@@ -11,6 +11,8 @@ function AttendanceForm({
   onSearchTextChange,
   onAddStudent,
   onSaveAttendance,
+  onMarkAllPresent,
+  hasStudents,
 }) {
   return (
     <>
@@ -82,6 +84,18 @@ function AttendanceForm({
           Save Attendance
         </button>
       </form>
+
+      {hasStudents && (
+        <div className="bulk-actions">
+          <button
+            className="mark-all-btn"
+            type="button"
+            onClick={onMarkAllPresent}
+          >
+            Mark All Present
+          </button>
+        </div>
+      )}
 
       <p className="form-message" aria-live="polite">
         {formMessage}

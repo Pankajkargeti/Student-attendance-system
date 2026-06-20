@@ -1,4 +1,9 @@
-function StudentTable({ students, onToggleAttendance, onDeleteStudent }) {
+function StudentTable({
+  students,
+  hasStudents,
+  onToggleAttendance,
+  onDeleteStudent,
+}) {
   return (
     <table>
       <thead>
@@ -14,7 +19,9 @@ function StudentTable({ students, onToggleAttendance, onDeleteStudent }) {
         {students.length === 0 && (
           <tr>
             <td className="empty-message" colSpan="5">
-              No students match your search.
+              {hasStudents
+                ? "No students match your search."
+                : "No students added yet. Add your first student above."}
             </td>
           </tr>
         )}

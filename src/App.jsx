@@ -170,6 +170,23 @@ function App() {
     }));
   }
 
+  function markAllPresent() {
+    setAttendanceRecords((currentRecords) => {
+      let updatedDateRecord = {
+        ...currentRecords[selectedDate],
+      };
+
+      students.forEach((student) => {
+        updatedDateRecord[student.id] = "Present";
+      });
+
+      return {
+        ...currentRecords,
+        [selectedDate]: updatedDateRecord,
+      };
+    });
+  }
+
   function deleteStudent(id) {
     let student = students.find((student) => student.id === id);
     let studentName = student?.name || "this student";
@@ -258,9 +275,12 @@ function App() {
         onSearchTextChange={setSearchText}
         onAddStudent={addStudent}
         onSaveAttendance={saveAttendance}
+        onMarkAllPresent={markAllPresent}
+        hasStudents={students.length > 0}
       />
       <StudentTable
         students={visibleStudents}
+        hasStudents={students.length > 0}
         onToggleAttendance={toggleAttendance}
         onDeleteStudent={deleteStudent}
       />
