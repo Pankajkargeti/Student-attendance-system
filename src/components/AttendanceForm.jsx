@@ -12,7 +12,9 @@ function AttendanceForm({
   onAddStudent,
   onSaveAttendance,
   onMarkAllPresent,
+  onResetDate,
   hasStudents,
+  hasRecordForDate,
 }) {
   return (
     <>
@@ -94,6 +96,15 @@ function AttendanceForm({
           >
             Mark All Present
           </button>
+          {hasRecordForDate && (
+            <button
+              className="reset-date-btn"
+              type="button"
+              onClick={onResetDate}
+            >
+              Reset This Date
+            </button>
+          )}
         </div>
       )}
 

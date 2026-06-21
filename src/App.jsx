@@ -3,6 +3,8 @@ import AttendanceForm from "./components/AttendanceForm";
 import Header from "./components/Header";
 import StudentTable from "./components/StudentTable";
 import Summary from "./components/Summary";
+import StudentHistory from "./components/StudentHistory";
+import Footer from "./components/Footer";
 
 const STUDENT_STORAGE_KEY = "attendanceStudents";
 const RECORD_STORAGE_KEY = "attendanceRecords";
@@ -90,6 +92,8 @@ function App() {
 
   const [formMessage, setFormMessage] = useState("");
 
+  const [historyStudentId, setHistoryStudentId] = useState(null);
+
   useEffect(() => {
     localStorage.setItem(STUDENT_STORAGE_KEY, JSON.stringify(students));
   }, [students]);
@@ -156,6 +160,36 @@ function App() {
   function updateStudentRollNo(rollNo) {
     setStudentRollNo(rollNo);
     setFormMessage("");
+  }
+
+  function editStudentName(id, newName) {
+    let trimmedName = newName.trim();
+
+    if (trimmedName === "") {
+      return;
+    }
+
+    setStudents((currentStudents) =>
+      currentStudents.map((student) =>
+        student.id === id ? { ...student, name: trimmedName } : student,
+      ),
+    );
+  }
+
+  function resetSelectedDate() {
+    let shouldReset = window.confirm(
+      `Reset attendance for ${selectedDate}? Everyone will be set back to unmarked for this date only.`,
+    );
+
+    if (!shouldReset) {
+      return;
+    }
+
+    setAttendanceRecords((currentRecords) => {
+      let updatedRecords = { ...currentRecords };
+      delete updatedRecords[selectedDate];
+      return updatedRecords;
+    });
   }
 
   function toggleAttendance(id) {
@@ -259,6 +293,34 @@ function App() {
 
   let savedDates = Object.keys(attendanceRecords).sort().reverse();
 
+  let historyStudent =
+    historyStudentId === null
+      ? null
+      : students.find((student) => student.id === historyStudentId) || null;
+
+  let historyEntries =
+    historyStudent === null
+      ? []
+      : Object.keys(attendanceRecords)
+          .filter(
+            (date) => attendanceRecords[date]?.[historyStudentId] !== undefined,
+          )
+          .sort()
+          .reverse()
+          .map((date) => ({
+            date,
+            status: attendanceRecords[date][historyStudentId],
+          }));
+
+  let historyPresentPercent =
+    historyEntries.length === 0
+      ? 0
+      : Math.round(
+          (historyEntries.filter((entry) => entry.status === "Present").length /
+            historyEntries.length) *
+            100,
+        );
+
   return (
     <main className="container">
       <Header />
@@ -276,15 +338,31 @@ function App() {
         onAddStudent={addStudent}
         onSaveAttendance={saveAttendance}
         onMarkAllPresent={markAllPresent}
+        onResetDate={resetSelectedDate}
         hasStudents={students.length > 0}
+        hasRecordForDate={
+          !!attendanceRecords[selectedDate] &&
+          Object.keys(attendanceRecords[selectedDate]).length > 0
+        }
       />
       <StudentTable
         students={visibleStudents}
         hasStudents={students.length > 0}
         onToggleAttendance={toggleAttendance}
         onDeleteStudent={deleteStudent}
+        onEditName={editStudentName}
+        onViewHistory={setHistoryStudentId}
       />
       <Summary students={studentsWithAttendance} />
+      {historyStudent !== null && (
+        <StudentHistory
+          student={historyStudent}
+          entries={historyEntries}
+          presentPercent={historyPresentPercent}
+          onClose={() => setHistoryStudentId(null)}
+        />
+      )}
+      <Footer />
     </main>
   );
 }
